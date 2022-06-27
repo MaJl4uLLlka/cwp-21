@@ -2,11 +2,7 @@
     "db": {
         "host": "localhost",
         "name": "my_db",
-        "user": "myuser",
-        "password": "123#qwe"
-    },
-    "cookie": {
-        "key": "secret key",
-        "auth": "__auth_id"
+        "user": "KKV_UNI",
+        "password": "GreenBoy"
     }
 }

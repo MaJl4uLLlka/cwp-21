@@ -13,7 +13,7 @@ const schema = Joi.object(
                 .empty(),
 
         officeId: Joi.number()
-                    .empty()
+                     .empty()
     }
 ); 
 
@@ -29,7 +29,7 @@ class AgentsService extends CrudService {
         try {
             const value = await schema.validateAsync(agent);
         } catch (error) {
-            //TODO: add errors   
+            throw this.errors.incorrectData;
         }
         
         return super.create(agent);
@@ -44,9 +44,9 @@ class AgentsService extends CrudService {
         }
 
         try {
-            const value = await schema.validateAsync(agent);
+            await schema.validateAsync(agent);
         } catch (error) {   
-            //TODO: add errors
+            throw this.errors.incorrectData;
         }
 
         return super.update(data.id, agent);

@@ -34,7 +34,7 @@ class PropertiesService extends CrudService {
         try {
             const value = await schema.validateAsync(property);
         } catch (error) {
-            //TODO: add errors   
+            throw this.errors.incorrectData;
         }
         
         return super.create(property);
@@ -52,7 +52,7 @@ class PropertiesService extends CrudService {
         try {
             const value = await schema.validateAsync(property);
         } catch (error) {   
-            //TODO: add errors
+            throw this.errors.incorrectData;
         }
 
         return super.update(data.id, property);

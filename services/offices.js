@@ -25,7 +25,7 @@ class OfficesService extends CrudService {
         try {
             const value = await schema.validateAsync(office);
         } catch (error) {
-            //TODO: add errors   
+            throw this.errors.incorrectData;
         }
         
         return super.create(office);
@@ -41,11 +41,11 @@ class OfficesService extends CrudService {
         try {
             const value = await schema.validateAsync(office);
         } catch (error) {   
-            //TODO: add errors
+            throw this.errors.incorrectData;
         }
 
         return super.update(data.id, office);
     }
 }
 
-module.exports = AgentsService;
+module.exports = OfficesService;

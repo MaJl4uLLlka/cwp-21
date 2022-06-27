@@ -23,14 +23,9 @@ module.exports = {
         code: 'entity_not_found',
         status: 404
     },
-    wrongCredentials: {
-        message: 'Email or password are wrong',
-        code: 'wrong_credentials',
-        status: 404
-    },
-    accessDenied: {
-        message: 'Access denied',
-        code: 'access_denied',
-        status: 403
+    incorrectData: {
+        message: 'Incorrect data',
+        code: 'incorrect_data',
+        status: 400
     }
 };
