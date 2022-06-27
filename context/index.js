@@ -17,11 +17,11 @@ module.exports = (Sequelize, config) =>{
 
     //Office -> Agent
     Agent.belongsTo(Office);
-    Office.hasMany(Agent);
+    Office.hasMany(Agent, {onDelete: "SET NULL"});
     
     //Agent -> Property
     Property.belongsTo(Agent);
-    Agent.hasMany(Property);
+    Agent.hasMany(Property, {onDelete: "SET NULL"});
 
     return {
         agents: Agent,

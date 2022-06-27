@@ -3,14 +3,20 @@ const Joi = require('joi');
 
 const schema = Joi.object(
     {
+        id: Joi.number()
+               .greater(0),
+
         title: Joi.string()
-                 .empty(),
+                 .empty()
+                 .required(),
                      
         website: Joi.string()
-                .empty(),
+                .empty()
+                .required(),
 
         address: Joi.string()
                     .empty()
+                    .required()
     }
 ); 
 
@@ -23,7 +29,7 @@ class OfficesService extends CrudService {
         }
 
         try {
-            const value = await schema.validateAsync(office);
+            await schema.validateAsync(office);
         } catch (error) {
             throw this.errors.incorrectData;
         }
@@ -39,12 +45,23 @@ class OfficesService extends CrudService {
         }
 
         try {
-            const value = await schema.validateAsync(office);
+            await schema.validateAsync(office);
         } catch (error) {   
             throw this.errors.incorrectData;
         }
 
         return super.update(data.id, office);
+    }
+
+    async readAgents(data)
+    {
+        
+        if(!Number.isInteger(data.id))
+        {
+            throw this.errors.invalidId;
+        }
+
+        return this.repository.findById(data.id, { include: 'agents' });
     }
 }
 

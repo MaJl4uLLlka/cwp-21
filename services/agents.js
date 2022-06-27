@@ -3,17 +3,24 @@ const Joi = require('joi');
 
 const schema = Joi.object(
     {
+        id: Joi.number()
+               .greater(0),
+
         name: Joi.string()
-                 .empty(),
+                 .empty()
+                 .required(),
 
         email: Joi.string()
-                     .pattern(/^(BYN)|(USD)|(EUR)/),
+                  .email()
+                  .required(),
                      
         tel: Joi.string()
-                .empty(),
+                .empty()
+                .required(),
 
         officeId: Joi.number()
                      .empty()
+                     .required()
     }
 ); 
 
@@ -27,7 +34,7 @@ class AgentsService extends CrudService {
         }
 
         try {
-            const value = await schema.validateAsync(agent);
+            await schema.validateAsync(agent);
         } catch (error) {
             throw this.errors.incorrectData;
         }
@@ -50,6 +57,41 @@ class AgentsService extends CrudService {
         }
 
         return super.update(data.id, agent);
+    }
+
+    async linkOffice(data){
+        if(!Number.isInteger(data.id) || !Number.isInteger(data.officeId))
+        {
+            throw this.errors.invalidId;
+        }
+
+        let agent = await this.read(data.id);
+
+        agent.officeId = data.officeId;
+        return super.update(data.id, agent);
+    }
+
+    async unlinkOffice(data){
+        if(!Number.isInteger(data.id))
+        {
+            throw this.errors.invalidId;
+        }
+
+        let agent = await this.read(data.id);
+
+        agent.officeId = null;
+        return super.update(data.id, agent);
+    }
+
+    async readProperties(data)
+    {
+        
+        if(!Number.isInteger(data.id))
+        {
+            throw this.errors.invalidId;
+        }
+
+        return this.repository.findById(data.id, { include: 'properties' });
     }
 }
 
