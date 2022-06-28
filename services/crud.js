@@ -1,3 +1,20 @@
+const Joi = require('joi');
+
+const optionsSchema = Joi.object({
+    limit: Joi.number()
+                  .integer()
+                  .greater(0),
+
+    offset: Joi.number()
+               .integer()
+               .greater(-1),
+    
+    sortOrder: Joi.string()
+                  .regex(/^((asc)|(desc)){1}$/),
+
+    sortField: Joi.string()
+});
+
 class CrudService {
     constructor(repository, errors) {
         this.repository = repository;
@@ -14,10 +31,24 @@ class CrudService {
     }
 
     async readChunk(options) {
-        options = Object.assign({}, this.defaults.readChunk, options);
+        try{
+            const value = await optionsSchema.validateAsync(options);
+            
+            if(value.limit)  options.limit = value.limit;
 
+            if(value.offset) options.offset = value.offset === '0' ? +0 : parseInt(value.offset);
+
+            if(value.sortOrder) options.order = value.sortOrder;
+
+            if(value.sortField) options.orderField = value.sortField;
+        }
+        catch(err) { options = {
+            offset: (this.defaults.readChunk.page - 1) * this.defaults.readChunk.limit
+        }}
+
+        options = Object.assign({}, this.defaults.readChunk, options);
         let limit = options.limit;
-        let offset = (options.page - 1) * options.limit;
+        let offset = options.offset;
 
         return await this.repository.findAll({
             limit: limit,

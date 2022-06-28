@@ -24,7 +24,7 @@ class CrudController {
 
     async readAll(req, res) {
         res.json(
-            await this.service.readChunk(req.params)
+            await this.service.readChunk(req.query)
         );
     }
 

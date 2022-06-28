@@ -15,7 +15,7 @@ const schema = Joi.object(
                   .required(),
         
         currency: Joi.string()
-                     .pattern(/^(BYN)|(USD)|(EUR)/)
+                     .pattern(/^((BYN)|(USD)|(EUR)){1}$/)
                      .required(),
                      
         location: Joi.string()
@@ -28,7 +28,52 @@ const schema = Joi.object(
     }
 ); 
 
+const optionsSchema = Joi.object({
+    step: Joi.number()
+                  .integer()
+                  .default(1)
+                  .min(1)
+                  .max(5),
+
+    offset: Joi.number()
+               .integer()
+               .greater(-1),
+    
+    sortOrder: Joi.string()
+                  .regex(/^((asc)|(desc)){1}$/),
+
+    sortField: Joi.string()
+});
+
 class PropertiesService extends CrudService {
+    async readChunk(options){
+        try{
+            const value = await optionsSchema.validateAsync(options);
+            
+            if(value.step)  options.limit = value.step*5;
+
+            if(value.offset) options.offset = value.offset === '0' ? +0 : parseInt(value.offset) ;
+
+            if(value.sortOrder) options.order = value.sortOrder;
+
+            if(value.sortField) options.orderField = value.sortField;
+        }
+        catch(err) { options = {
+            offset: (this.defaults.readChunk.page - 1) * this.defaults.readChunk.limit
+        } }
+        
+        options = Object.assign({}, this.defaults.readChunk, options);
+        let limit = options.limit;
+        let offset = options.offset;
+
+        return await this.repository.findAll({
+            limit: limit,
+            offset: offset,
+            order: [[options.orderField, options.order.toUpperCase()]],
+            raw: true
+        });
+    }
+
     async create(data) {
         let property = {
             heading: data.heading,

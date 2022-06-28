@@ -18,7 +18,19 @@ const schema = Joi.object(
                     .empty()
                     .required()
     }
-); 
+);
+
+const optionsSchema = Joi.object(
+    {
+        limit: Joi.number()
+                  .integer()
+                  .greater(0),
+
+        offset: Joi.number()
+                   .integer()
+                   .greater(-1)
+    }
+);
 
 class OfficesService extends CrudService {
     async create(data) {
@@ -53,15 +65,35 @@ class OfficesService extends CrudService {
         return super.update(data.id, office);
     }
 
-    async readAgents(data)
+    async readAgents(data, options)
     {
-        
+        let queryOptions = {
+            association: 'agents',
+            limit: 10,
+            offset: 0
+        };
+
         if(isNaN(data.id))
         {
             throw this.errors.invalidId;
         }
 
-        return this.repository.findByPk(data.id, {include: 'agents'});
+        try{
+            let value = await optionsSchema.validateAsync(options);
+            
+            if(value.limit)
+            {
+                queryOptions.limit = value.limit;
+            }
+
+            if(value.offset)
+            {
+                queryOptions.offset =  value.offset;
+            }
+        }
+        catch(err){}
+
+        return this.repository.findByPk(data.id, {include: queryOptions});
     }
 }
 
