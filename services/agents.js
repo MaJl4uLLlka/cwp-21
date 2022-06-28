@@ -30,7 +30,7 @@ class AgentsService extends CrudService {
             name: data.name,
             email: data.email,
             tel: data.tel,
-            officeId: data.agentId
+            officeId: data.officeId
         }
 
         try {
@@ -47,7 +47,7 @@ class AgentsService extends CrudService {
             name: data.name,
             email: data.email,
             tel: data.tel,
-            officeId: data.agentId
+            officeId: data.officeId
         }
 
         try {
@@ -60,7 +60,7 @@ class AgentsService extends CrudService {
     }
 
     async linkOffice(data){
-        if(!Number.isInteger(data.id) || !Number.isInteger(data.officeId))
+        if(isNaN(data.id) || isNaN(data.officeId))
         {
             throw this.errors.invalidId;
         }
@@ -72,7 +72,7 @@ class AgentsService extends CrudService {
     }
 
     async unlinkOffice(data){
-        if(!Number.isInteger(data.id))
+        if(isNaN(data.id))
         {
             throw this.errors.invalidId;
         }
@@ -86,12 +86,12 @@ class AgentsService extends CrudService {
     async readProperties(data)
     {
         
-        if(!Number.isInteger(data.id))
+        if(isNaN(data.id))
         {
             throw this.errors.invalidId;
         }
 
-        return this.repository.findById(data.id, { include: 'properties' });
+        return this.repository.findByPk(data.id, { include: 'properties' });
     }
 }
 

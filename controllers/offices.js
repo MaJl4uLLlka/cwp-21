@@ -8,7 +8,7 @@ class OfficesController extends CrudController {
         this.readAgents = this.readAgents.bind(this);
 
         this.routes['/'] = [{ method: 'get', cb: this.readAll }];
-        this.routes['/:id/agents'] = [{ method: 'get', cb: this.readAll }];
+        this.routes['/:id/agents'] = [{ method: 'get', cb: this.readAgents }];
 
         this.registerRoutes();
     }

@@ -67,7 +67,7 @@ class PropertiesService extends CrudService {
 
     async linkAgent(data)
     {
-        if(!Number.isInteger(data.id) || !Number.isInteger(data.agentId))
+        if(isNaN(data.id) || isNaN(data.agentId))
         {
             throw this.errors.invalidId;
         }
@@ -80,7 +80,7 @@ class PropertiesService extends CrudService {
 
     async unlinkAgent(data)
     {
-        if(!Number.isInteger(data.id))
+        if(isNaN(data.id))
         {
             throw this.errors.invalidId;
         }

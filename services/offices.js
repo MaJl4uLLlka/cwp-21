@@ -56,12 +56,12 @@ class OfficesService extends CrudService {
     async readAgents(data)
     {
         
-        if(!Number.isInteger(data.id))
+        if(isNaN(data.id))
         {
             throw this.errors.invalidId;
         }
 
-        return this.repository.findById(data.id, { include: 'agents' });
+        return this.repository.findByPk(data.id, {include: 'agents'});
     }
 }
 

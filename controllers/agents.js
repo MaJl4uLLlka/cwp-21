@@ -31,7 +31,7 @@ class AgentsController extends CrudController {
 
     async unlinkOffice(req, res){
         res.json(
-            await this.unlinkOffice(req.params)
+            await this.service.unlinkOffice(req.params)
         );
     }
 
